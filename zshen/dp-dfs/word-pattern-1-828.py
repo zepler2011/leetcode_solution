@@ -17,9 +17,11 @@ class Solution:
         for i in range(n):
             c = pattern[i]
             w = words[i]
-            if c not in d:
-                if w in d2:
-                    return False
+            if c in d and d[c] != w:
+                return False
+            if w in d2 and d2[w] != c:
+                return False 
+            if c not in d and w not in d2:
                 d[c] = w
                 d2[w] = c
             res.append(d[c])
