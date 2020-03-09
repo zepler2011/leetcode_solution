@@ -6,32 +6,28 @@ class Solution:
     """
     def wordPattern(self, pattern, teststr):
         # write your code here
-        d = {}
-        d2 = {}
+        p2w = {}
+        w2p = {}
         words =  teststr.split()
-        res = []
         if len(pattern) != len(words):
             return False
         
         n = len(pattern)
         for i in range(n):
-            c = pattern[i]
+            p = pattern[i]
             w = words[i]
-            if c in d and d[c] != w:
+            if p in p2w and p2w[p] != w:
                 return False
-            if w in d2 and d2[w] != c:
+                
+            if w in w2p and w2p[w] != p:
                 return False 
-            if c not in d and w not in d2:
-                d[c] = w
-                d2[w] = c
-            res.append(d[c])
-            
-        for i in range(n):
-            if res[i] != words[i]:
-                return False
-            
+                
+            if p not in p2w and w not in w2p:
+                p2w[p] = w
+                w2p[w] = p
+
         return True 
 
 """
-'values' must be unique
+better naming, and remove the 'res' variable
 """
