@@ -7,45 +7,48 @@ class Solution:
     """
     def findLadders(self, start, end, dict):
 
-        K = self.bfs(start, end, dict) 
+        K = self.bfs(end, start, dict) 
         res = []
         if end not in dict:
             dict.add(end)
-        self.dfs(start, end, [start], dict, K-1, res)
+        self.dfs(start, end, set(start), [start], dict, K, res)
 
         return sorted(res)
 
     def bfs(self, start, end, dict):
-        atoz = 'abcdefghijklmnopqrstuvwxyz'
-        currq, nextq = [start], []
-        visited = set()
-        cnt = 1
         
+        d = {}
+        distance = 1 
+        d[start] = 0
+        currq, nextq = [start],[]
+
         while currq:
             word = currq.pop(0)
             for i in range(len(word)):
-                for new in atoz:
-                    if word[i] == new:
+                for c in 'abcdefghijklmnopqrstuvwxyz':
+                    if c is word[i]:
                         continue
-                    newWord = word[:i] + new + word[i+1:]
-                    if newWord in visited:
+                    new = word[:i] + c + word[i+1:]
+                    if new not in dict:
                         continue
-                    if newWord == end:
-                        cnt += 1
-                        return cnt 
-                    elif newWord in dict:
-                        nextq.append(newWord)
-                        visited.add(newWord)
+                    if new in d:
+                        continue
+                    if new == end:
+                        d[new] = distance + 1
+                        return d 
+                    d[new] = distance
+                    nextq.append(new)
+                    
             if not currq:
                 currq,nextq = nextq,currq
-                cnt += 1
-        
-        return cnt        
-    
+                distance += 1 
 
-    def dfs(self, word, end, visited, dict, K, res):
-        if K == 0 and visited[-1] == end:
-            res.append(visited[:])
+        return d
+
+
+    def dfs(self, word, end, visited, ladder, dict, K, res):
+        if K[word] == 0 :
+            res.append(ladder[:])
             return
         
         for i in range(len(word)):
@@ -56,9 +59,14 @@ class Solution:
                 if new in visited:
                     continue
                 
-                if new in dict:
-                    visited.append(new)
-                    self.dfs(new, end, visited, dict, K-1, res)
-                    visited.pop()
+                if new not in dict:
+                    continue
+                
+                if new in K and K[new] == K[word] -1 :
+                    visited.add(new)
+                    ladder.append(new)
+                    self.dfs(new, end, visited, ladder, dict, K, res)
+                    visited.remove(new)
+                    ladder.pop()
 
         return
