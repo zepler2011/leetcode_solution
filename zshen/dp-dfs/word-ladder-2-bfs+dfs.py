@@ -8,9 +8,10 @@ class Solution:
     def findLadders(self, start, end, dict):
 
         K = self.bfs(start, end, dict) 
-        visited = set(start)
         res = []
-        self.dfs(start, end, visited, dict, K, res)
+        if end not in dict:
+            dict.add(end)
+        self.dfs(start, end, [start], dict, K-1, res)
 
         return sorted(res)
 
@@ -43,31 +44,21 @@ class Solution:
     
 
     def dfs(self, word, end, visited, dict, K, res):
-        if K == 0:
+        if K == 0 and visited[-1] == end:
+            res.append(visited[:])
             return
-
+        
         for i in range(len(word)):
-            for new in 'abcdefghijklmnopqrstuvwxyz':
-                if word[i] == new:
+            for c in 'abcdefghijklmnopqrstuvwxyz':
+                if word[i] == c:
                     continue
-                newWord = word[:i] + new + word[i+1:]
-
-                if newWord in visited:
+                new = word[:i] + c + word[i+1:]
+                if new in visited:
                     continue
                 
-                if K == 1 and newWord == end:
-                    # need to store
-                    res.append(list(visited).append(newWord))
-                    return
-                
-                if newWord in dict:
-                    visited.add(newWord)
-                    self.dfs(newWord, end, visited, dict, K-1, res)
-                    visited.remove(newWord)
+                if new in dict:
+                    visited.append(new)
+                    self.dfs(new, end, visited, dict, K-1, res)
+                    visited.pop()
 
         return
-
-"""
-1. [done] change 2 queues back to 1 queue, ignore cnt 
-2. change the BFS to DFS:
-"""
