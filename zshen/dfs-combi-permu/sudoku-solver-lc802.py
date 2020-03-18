@@ -12,30 +12,15 @@ class Solution:
                 b[i][j] = set()
         
         for i in range(9):
-            exist = set(board[i])
-            for d in range(1, 9):
-                if d not in exist:
-                    r[i].add(d)
-
-        for j in range(9):
-            exist = [board[i][j] for i in range(9)]
-            for d in range(1, 9):
-                if d not in exist:
-                    c[j].add(d)
-
-        for i in range(3):
-            for j in range(3):
-                exist = []
-                I = i*3
-                J = j*3
-                for i_ in range(3):
-                    for j_ in range(3):
-                        
-                        if board[I+i_][J+j_] != 0:
-                            exist.append(board[I+i_][J+j_])
-                for d in range(1, 9):
-                    if d not in exist:
-                        b[i][j].add(d)
+            for j in range(9):
+                if board[i][j] is not 0:
+                    val = board[i][j]
+                    if val not in r[i]:
+                        r[i].add(val)
+                    if val not in c[j]:
+                        c[j].add(val)
+                    if val not in b[i%3][j%3]:
+                        b[i%3][j%3].add(val)
 
         self.dfs(board, 0, 0, r, c, b)
         return
@@ -47,31 +32,21 @@ class Solution:
         for i in range(I, 9):
             for j in range(J, 9):
 
-                for d in range(9):
+                for d in range(1, 10):
                     if board[i][j] != 0:
                         continue
-                    if d not in r[i]:
+                    if d in r[i] or d in c[j] or d in b[i%3][j%3]:
                         continue
-                    if d not in c[j]:
-                        continue
-                    if d not in b[i%3][j%3]:
-                        continue 
-                    
-                    r[i].remove(d)
-                    c[j].remove(d)
-                    b[i%3][j%3].remove(d)
+
+                    r[i].add(d)
+                    c[j].add(d)
+                    b[i%3][j%3].add(d)
                     board[i][j] = d
                     if self.dfs(board, i, j, r,c,b):
                         return True
                     board[i][j] = 0
-                    r[i].add(d)
-                    c[j].add(d)
-                    b[i%3][j%3].add(d)
+                    r[i].remove(d)
+                    c[j].remove(d)
+                    b[i%3][j%3].remove(d)
                     
-        return False
-
-"""
-思路：用三个hashset 分别代表 能否 加入的 数字
-在dfs时候 仅当 能够 使用时才可以选当前数字
-"""
-
+            return False
