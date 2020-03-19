@@ -11,9 +11,11 @@ class Solution:
             for j in range(3):
                 b[i][j] = set()
         
+        cnt = 81
         for i in range(9):
             for j in range(9):
-                if board[i][j] is not 0:
+                if board[i][j] != 0:
+                    cnt -= 1
                     val = board[i][j]
                     if val not in r[i]:
                         r[i].add(val)
@@ -22,15 +24,15 @@ class Solution:
                     if val not in b[i%3][j%3]:
                         b[i%3][j%3].add(val)
 
-        self.dfs(board, 0, 0, r, c, b)
+        self.dfs(board, r, c, b, cnt)
         return
     
-    def dfs(self, board, I, J, r, c, b):
-        if I == 9 and J == 9:
+    def dfs(self, board, r, c, b, cnt):
+        if cnt == 0:
             return True
         
-        for i in range(I, 9):
-            for j in range(J, 9):
+        for i in range(9):
+            for j in range(9):
 
                 for d in range(1, 10):
                     if board[i][j] != 0:
@@ -42,11 +44,13 @@ class Solution:
                     c[j].add(d)
                     b[i%3][j%3].add(d)
                     board[i][j] = d
-                    if self.dfs(board, i, j, r,c,b):
+                    cnt -= 1
+                    if self.dfs(board, r,c,b, cnt):
                         return True
                     board[i][j] = 0
+                    cnt += 1
                     r[i].remove(d)
                     c[j].remove(d)
                     b[i%3][j%3].remove(d)
                     
-            return False
+        return False
