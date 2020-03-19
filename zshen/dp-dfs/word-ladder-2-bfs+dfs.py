@@ -7,10 +7,10 @@ class Solution:
     """
     def findLadders(self, start, end, dict):
 
+        dict.add(start)
+        dict.add(end)
         K = self.bfs(end, start, dict) 
         res = []
-        if end not in dict:
-            dict.add(end)
         self.dfs(start, end, set(start), [start], dict, K, res)
 
         return sorted(res)
@@ -34,7 +34,7 @@ class Solution:
                     if new in d:
                         continue
                     if new == end:
-                        d[new] = distance + 1
+                        d[new] = distance
                         return d 
                     d[new] = distance
                     nextq.append(new)
