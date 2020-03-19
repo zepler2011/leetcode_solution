@@ -4,29 +4,19 @@ class Solution:
     @return: nothing
     """
     def solveSudoku(self, board):
-        r = [0] * 9
-        for i in range(9):
-            r[i] = set()
-        c = [0] * 9
-        for i in range(9):
-            c[i] = set()
-        b = [[0] * 3  for _ in range(3)]
-        for i in range(3):
-            for j in range(3):
-                b[i][j] = set()
-        
+        r = [set() for _ in range(9)]
+        c = [set() for _ in range(9)]
+        b = [[set() for _ in range(3)]  for _ in range(3)]
+
         cnt = 81
         for i in range(9):
             for j in range(9):
                 if board[i][j] != 0:
                     cnt -= 1
                     val = board[i][j]
-                    if val not in r[i]:
-                        r[i].add(val)
-                    if val not in c[j]:
-                        c[j].add(val)
-                    if val not in b[i//3][j//3]:
-                        b[i//3][j//3].add(val)
+                    r[i].add(val)
+                    c[j].add(val)
+                    b[i//3][j//3].add(val)
         self.dfs(board, r, c, b, cnt)
         return
     
