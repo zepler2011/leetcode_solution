@@ -27,7 +27,6 @@ class Solution:
                         c[j].add(val)
                     if val not in b[i//3][j//3]:
                         b[i//3][j//3].add(val)
-
         self.dfs(board, r, c, b, cnt)
         return
     
@@ -42,7 +41,6 @@ class Solution:
                 for d in range(1, 10):
                     if d in r[i] or d in c[j] or d in b[i//3][j//3]:
                         continue
-
                     r[i].add(d)
                     c[j].add(d)
                     b[i//3][j//3].add(d)
@@ -55,8 +53,7 @@ class Solution:
                     r[i].remove(d)
                     c[j].remove(d)
                     b[i//3][j//3].remove(d)
-                    
-        return False
+                return False
     
 # second try:
 class Solution:
