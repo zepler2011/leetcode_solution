@@ -10,11 +10,24 @@ class Solution:
         
         n = len(A)
         f = [1] * n
+        t = [-1] * n
+        maxLen = 1
+        maxIdx = 0
         for i in range(n):
             for j in range(i):
                 if A[i] > A[j]:
-                    f[i] = max(f[i], f[j]+1)
-        return max(f)
+                    if f[j]+1 > f[i]:
+                        f[i]=f[j]+1
+                        t[i]=j
+                    if f[i] > maxLen:
+                        maxLen = f[i]
+                        maxIdx = i
+        res = []
+        while maxIdx > -1:
+            res.append(A[maxIdx])
+            maxIdx = t[maxIdx]
+        print res
+        return maxLen 
 
         
 """
