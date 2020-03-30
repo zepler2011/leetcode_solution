@@ -1,35 +1,39 @@
-class Solution:
-    """
-    @param nums: An integer array
-    @return: The length of LIS (longest increasing subsequence)
-    """
-    def longestIncreasingSubsequence(self, A):
-        # write your code here
-        n = len(A)
-        if n <= 1:
-            return n 
-            
-        f = [[(0,0)]*n for _ in range(n)]
+class Solution(object):
+    def lengthOfLIS(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        if not nums:
+            return 0
         
-        for i in range(n):
-            f[i][i] = (1,A[i])
-            
-        for l in range(1,n):
-            for i in range(0, n-l):
-                j = i+l
-                lis, maxVal = f[i][j-1]
-                if A[j] > maxVal:
-                    f[i][j] = (lis+1,A[j])
-                else:
-                    f[i][j] = (lis,maxVal)
+        n = len(nums)
+        f = [nums[0]]
+        for i in range(1, n):
+            if nums[i] > f[-1]:
+                f.append(nums[i])
+            else:
+                idx = self.findFirstLargerPosition(f, nums[i])
+                f[idx] = nums[i]
+                    
+        return len(f)
+    
+    def findFirstLargerPosition(self, array, target):
+        # find first position larger than it
         
-        for r in f:
-            print r 
-        ans = [f[i][n-1][0] for i in range(n)]
-        return max(ans)
+        start,end = 0,len(array)-1
         
+        while start+1<end:
+            mid = (start+end)//2
+            if target >= array[mid]:
+                start = mid 
+            elif target < array[mid]:
+                end = mid
         
-"""
-反例： [10,1,11,2,12,3,11]
-
-"""
+        if array[start] >= target:
+            return start 
+        elif array[end] >= target:
+            return end 
+        
+        assert('Could not find a position equal to or larger than target', False)
+        return
